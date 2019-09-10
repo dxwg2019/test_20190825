@@ -1,0 +1,57 @@
+// モジュール
+var aws = require('aws-sdk'); // AWS SDKモジュール
+//var momentTz = require('moment-timezone'); // moment-timezone.js用ライブラリ
+ 
+/**
+* リクエストが送られてきたときのハンドラー
+*/
+exports.handler = function(req, context, callback) {
+ 
+    console.log("401 start.");
+    console.log("402 request : " + JSON.stringify(req));
+    console.log("403 context : " + JSON.stringify(context));
+    console.log("404 request-headers : " + req.headers);
+    console.log("405 request-body : " + JSON.stringify(req.body));
+ 
+    // リクエストのbodyをJSONにする
+    var body = req.body;
+    var sensor = JSON.parse(body);
+    if (sensor != null) {
+         // センサーデータの内容を表示
+         console.log("406 sensor - id : " + sensor["id"]); 
+         console.log("406 sensor - value : " + sensor["value"]); 
+         console.log("406 sensor - unit : " + sensor["unit"]); 
+         console.log("406 sensor - value01 : " + sensor["value01"]); 
+         console.log("406 sensor - value02 : " + sensor["value02"]); 
+         console.log("406 sensor - value03 : " + sensor["value03"]); 
+         console.log("406 sensor - datatype : " + sensor["datatype"]); 
+         console.log("406 sensor - unixtime : " + sensor["unixtime"]); 
+         console.log("406 sensor - dataid : " + sensor["dataid"]); 
+         console.log("406 sensor - packetid : " + sensor["packetid"]); 
+         console.log("406 sensor - rssi : " + sensor["rssi"]); 
+         console.log("406 sensor - battery : " + sensor["battery"]);
+ 
+         // データ項目のunixtimeをローカルタイム（JST）に変換
+         //console.log("406 moment-tomezone.js unixtime → JST : " + momentTz.unix(sensor["unixtime"], 'X').tz("Asia/Tokyo").format("YYYY-MM-DD HH:mm:ss"));
+ 
+         }
+         else {
+                 // リクエストのBodyがない場合はエラー
+                 console.log("999 error! request body is null !!! ");
+                 console.error("999 request body is null !");
+         }
+ 
+         // レスポンス＆コールバック
+         const response = {
+         statusCode: 200,
+                 headers: {
+                         "Access-Control-Allow-Origin" : "https://s3-ap-northeast-1.amazonaws.com",
+                         "Access-Control-Allow-Credentials" : true, // Required for cookies, authorization headers with HTTPS 
+                         "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept"
+                 },
+                 body: JSON.stringify({ "message": "lamdba function is callback!" })
+         };
+         callback(null, response);
+         console.log("499 end!");
+};
+
